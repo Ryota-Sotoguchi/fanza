@@ -1,0 +1,18 @@
+# 秘密情報
+.env
+
+# 実行時データ(DB・ログ・出力・ブラウザのログイン状態)
+data/
+logs/
+output/
+reports/
+profile/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/

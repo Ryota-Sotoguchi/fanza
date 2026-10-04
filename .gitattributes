@@ -1,0 +1,6 @@
+# Windows のバッチ・PowerShell は CRLF で保存する(cmd のラベル解釈の不具合を避けるため)
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.py text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
