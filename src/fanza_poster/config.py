@@ -355,6 +355,17 @@ class Secrets:
             names.append("ANTHROPIC_API_KEY")
         return names
 
+    def placeholders(self) -> list[str]:
+        """.env.example の雛形の値のまま書き換えていない項目。"""
+        names = []
+        if "xxxx" in self.dmm_api_id:
+            names.append("DMM_API_ID")
+        if self.dmm_affiliate_id.startswith("yourname-"):
+            names.append("DMM_AFFILIATE_ID")
+        if "xxxx" in self.anthropic_api_key:
+            names.append("ANTHROPIC_API_KEY")
+        return names
+
 
 @dataclass
 class Settings:

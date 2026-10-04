@@ -73,7 +73,13 @@ def cmd_selfcheck(app, args) -> int:
     results.append(("収集対象", True, f"フロア {', '.join(cfg.collect.floors)} / 割引率 {cfg.collect.min_discount_rate}% 以上"))
 
     missing = app.settings.secrets.missing()
-    results.append((".env", not missing, "OK" if not missing else f"未設定: {', '.join(missing)}"))
+    placeholders = app.settings.secrets.placeholders()
+    if missing:
+        results.append((".env", False, f"未設定: {', '.join(missing)}"))
+    elif placeholders:
+        results.append((".env", False, f"雛形の値のまま: {', '.join(placeholders)}"))
+    else:
+        results.append((".env", True, "OK"))
 
     try:
         mapping = {style: app.settings.affiliate_id_for(style) for style in cfg.tracking.affiliate_ids}

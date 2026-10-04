@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import random
 from datetime import date
+from pathlib import Path
 
 import pytest
 
 from fanza_poster.collect.dmm_client import discount_of, extract_pricing, parse_item, with_affiliate_id
 from fanza_poster.collect.filters import ExclusionFilter
 from fanza_poster.collect.genre import classify
-from fanza_poster.config import ConfigError, parse_config
+from fanza_poster.config import ConfigError, Secrets, load_secrets, parse_config
 from fanza_poster.generate.summary import SummaryEntry, build_summary_reply, build_summary_text
 from fanza_poster.generate.validate import Facts, validate_label, validate_single
 from fanza_poster.post.detect import classify as detect
@@ -25,6 +26,15 @@ def test_shipped_config_loads():
     assert cfg.collect.floors == ["videoa"]
     assert cfg.generation.model == "claude-haiku-4-5"
     assert cfg.schedule.weekly_posts == [6, 8, 12]
+
+
+def test_env_example_values_are_reported_as_placeholders(tmp_path):
+    example = Path(__file__).resolve().parents[1] / ".env.example"
+    (tmp_path / ".env").write_text(example.read_text(encoding="utf-8"), encoding="utf-8")
+    secrets = load_secrets(tmp_path)
+    assert secrets.missing() == []
+    assert secrets.placeholders() == ["DMM_API_ID", "DMM_AFFILIATE_ID", "ANTHROPIC_API_KEY"]
+    assert Secrets("apiid", "me-990", "sk-ant-real").placeholders() == []
 
 
 @pytest.mark.parametrize("floor", ["anime", "doujin", "comic"])
